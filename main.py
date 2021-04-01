@@ -10,6 +10,7 @@ conn = sqlite3.connect('accounts.db')
 conn.execute("CREATE TABLE IF NOT EXISTS accounts (name, position, email, phone, office,address)")
 conn.commit()
 
+
 def scrape_and_build():
     # while loop, only because we dont know how many pages we will encounter
     cur_page = 0
@@ -25,7 +26,6 @@ def scrape_and_build():
         # stop loop if nothing found, should stop at around page 189 at the time im writing this
         # or, will stop if mercy screws up, and then data wont be messed with
         if not listings:
-            conn.commit()
             print(
                 f'Database building has finished. {new} new listings were added and {existing} existing were modified')
             break
@@ -77,10 +77,16 @@ def scrape_and_build():
                 new += 1
                 conn.execute("INSERT INTO accounts VALUES (?,?,?,?,?,?)", (name, position, email, phone, office, addr))
                 print('Adding', name)
+                conn.commit()
         cur_page += 1
 
 
 def search_db_for(query):
+    row_ct = conn.execute('SELECT COUNT(*) FROM accounts')
+    if row_ct == 0:
+        print(
+            'Your database is empty! You need to populate it before you can search.\nRun the -build argument to do so.')
+        return
     vis_query = query
     query = '%' + query + '%'
     # we're just not going to include address, not only because pretty much nobody has a specific one listed
