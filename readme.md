@@ -9,6 +9,7 @@ system to search the directory however i want.
 ## how
 there are 2 parts of how this is done. the first is the database 'building'. i employ web scraping using beautifulsoup4 and requests, then store all those results into a sqlite3 database.  
 the second is the search feature, which simply runs SQL "like" queries against the database to search through it, and then we use prettytable to write the results out neatly in console (if any)  
+the database and table is created automatically upon your first run, so don't worry
 
 ## usage
 this is a command-line based tool, so all your work will be done in there.  
